@@ -8,7 +8,7 @@
 
 # Define directories where data is located --------------------------------
 # Assumes all data is located in this folder:
-data_dir = '~/Documents/USAID/DRC Coordination/data'
+data_dir = '~/Documents/USAID/DRC Coordination/data/'
 
 
 # Import necessary R packages ---------------------------------------------
@@ -46,3 +46,15 @@ for (i in seq_along(pkgs)) {
 }
 
 extrafont::loadfonts(quiet = TRUE)
+
+# Clean up the workspace
+rm('i', 'pkgs', 'toInstall', 'alreadyInstalled')
+
+# import data -------------------------------------------------------------
+
+# -- Geographic data --
+load(paste0(data_dir, 'geodata.RData'))
+
+# -- Partner locations --
+
+# -- Results data --
