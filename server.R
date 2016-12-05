@@ -7,23 +7,44 @@
 
 shinyServer(
   function(input, output, session) {
+    # filter data based on user inputs ----------------------------------------
+    filter_data = reactive({
+      
+      # -- filter and collapse down activities --
+      filtered_im = im %>% 
+        filter(TechnicalTeamName %in% input$selected_tech) %>% 
+        # group_by(Province) %>% 
+        group_by(Province, TerritoryName) %>% 
+        summarise(n = n())
+      
+      
+      # -- merge to geodata --
+      filtered_geo = admin2
+      filtered_geo@data = left_join(filtered_geo@data, filtered_im, by = c('PrNam' = 'Province',
+                                                                           'TCNam' = 'TerritoryName'))
+      # filtered_geo@data = left_join(filtered_geo@data, filtered_im, by = c('PrNam' = 'Province'))
+      
+      View(filtered_geo)
+      return(filtered_geo)
+    })
+    
     
     # main map of locations by territory ------------------------------------------------------------
     
     output$main = renderLeaflet({
       
-      filteredDF = admin1
-      
+      filtered_df = filter_data()
       
       
       # -- Pull out the centroids --
       
       
       # -- Info popup box -- 
-      info_popup <- paste0("<strong>District: </strong>", 
-                           admin1$PrNam,
+      info_popup <- paste0("<strong>Province: </strong>", 
+                           filtered_df$PrNam,
+                           filtered_df$TCNam,
                            "<br><strong>mechanisms: </strong> <br>",
-                           admin1$OldPrNam)
+                           filtered_df$n)
       
       # info_popup_circles <- paste0("<strong>District: </strong>", 
       #                              rw_centroids$District,
@@ -31,38 +52,44 @@ shinyServer(
       #                              rw_centroids$ips)
       
       # -- leaflet map --
-      leaflet(data = admin2) %>%
-        addProviderTiles("Esri.WorldShadedRelief",
-                         options = tileOptions(minZoom = 5, maxZoom  = 11)) %>%
-        addProviderTiles("Stamen.TonerHybrid",
-                         options = providerTileOptions(opacity = 0.35)) %>%
+      leaflet(data = filtered_df) %>%
+        addProviderTiles("Esri.WorldGrayCanvas",
+                         options = tileOptions(minZoom = 5, maxZoom  = 11, opacity = 0.8)) %>%
+        # addProviderTiles("Stamen.TonerHybrid",
+        # options = providerTileOptions(opacity = 0.35)) %>%
         # addProviderTiles("CartoDB.DarkMatter",
         #                  options = tileOptions(minZoom = 5, maxZoom  = 11)) %>%
         setMaxBounds(minLon, minLat, maxLon, maxLat) %>%
-
-        addPolygons(fillColor = ~categPal(PrNam),
-                    fillOpacity = 0.3,
+        
+        
+        
+        addPolygons(fillColor = ~contPal(n),
+                    fillOpacity = 0.85,
                     color = grey70K,
                     weight = 1,
-                    popup = info_popup) 
-        # addMarkers(data = rw_centroids, lng = ~Lon, lat = ~Lat,
-        #            label = ~as.character(num),
-        #            icon = makeIcon(
-        #              iconUrl = "img/footer_Rw.png",
-        #              iconWidth = 1, iconHeight = 1,
-        #              iconAnchorX = 0, iconAnchorY = 0),
-        #            labelOptions = lapply(1:nrow(rw_centroids),
-        #                                  function(x) {
-        #                                    labelOptions(opacity = 1, noHide = TRUE,
-        #                                                 direction = 'auto',
-        #                                                 offset = c(-10, -12))
-        #                                  })
-        # # )%>%
-        # addCircles(data = rw_centroids, lat = ~Lat, lng = ~Lon,
-        #            radius = ~num * circleScaling,
-        #            color = strokeColour, weight = 0.5,
-        #            popup = info_popup_circles,
-        #            fillColor = ~categPal(Province), fillOpacity = 0.25) 
+                    popup = info_popup) %>% 
+        addLegend("bottomleft", pal = contPal, values = ~n,
+                  title = "number of activities",
+                  opacity = 1
+        )
+      # addMarkers(data = rw_centroids, lng = ~Lon, lat = ~Lat,
+      #            label = ~as.character(num),
+      #            icon = makeIcon(
+      #              iconUrl = "img/footer_Rw.png",
+      #              iconWidth = 1, iconHeight = 1,
+      #              iconAnchorX = 0, iconAnchorY = 0),
+      #            labelOptions = lapply(1:nrow(rw_centroids),
+      #                                  function(x) {
+      #                                    labelOptions(opacity = 1, noHide = TRUE,
+      #                                                 direction = 'auto',
+      #                                                 offset = c(-10, -12))
+      #                                  })
+      # # )%>%
+      # addCircles(data = rw_centroids, lat = ~Lat, lng = ~Lon,
+      #            radius = ~num * circleScaling,
+      #            color = strokeColour, weight = 0.5,
+      #            popup = info_popup_circles,
+      #            fillColor = ~categPal(Province), fillOpacity = 0.25) 
     })
     
     mtcars %>%

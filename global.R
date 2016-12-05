@@ -60,8 +60,10 @@ rm('i', 'pkgs', 'toInstall', 'alreadyInstalled')
 load(paste0(data_dir, 'geodata.RData'))
 
 # -- Partner locations --
+im = read_excel('~/Documents/USAID/DRC Coordination/Mapping-IMByTerritory.xlsx') 
 
-# -- Results data --
+
+  # -- Results data --
 
 # Set limits for bounding box ---------------------------------------------
 spacer = 0.05
@@ -76,6 +78,8 @@ maxLat = admin1@bbox['y', 'max'] * (1+spacer)
 provinces = unique(admin1$PrNam)
 
 territories = unique(admin2$TCNam)
+
+tech_areas = unique(im$TechnicalTeamName)
 
 # mechanisms = sort(unique(df$mechanism))
 # 
@@ -92,6 +96,7 @@ territories = unique(admin2$TCNam)
 # Define colors for maps --------------------------------------------------
 grey70K = "#6d6e71"
 baseColour = grey15K = "#DCDDDE"
+grey25K = '#c7c8ca'
 labelColour = grey90K = "#414042"
 strokeColour = grey90K
 
@@ -103,7 +108,8 @@ colourProv = c('#e41a1c', '#377eb8',
                '#4daf4a', '#984ea3', '#ff7f00')
 
 categPal = colorFactor(palette = 'YlOrRd', domain = provinces)
-contPal = colorNumeric(palette = 'YlGnBu', domain = 0:20)
+contPal = colorNumeric(palette = 'Blues', domain = 0:25, na.color = grey25K)
+# contPal = colorQuantile(palette = 'Blues', domain = 0:10, na.color = grey25K)
 
 # sizes -------------------------------------------------------------------
 widthMap = '600px'

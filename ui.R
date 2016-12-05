@@ -15,12 +15,10 @@ header <- dashboardHeader(
 
 # Define sidebar for filtering -----------------------------------------------
 sidebar <- dashboardSidebar(
-  # -- Select results --
-  
-  # -- Select mechanisms --
-  # checkboxGroupInput('filterMech',label = 'mechanism', inline = FALSE,
-  #                    choices = mechanisms,
-  #                    selected = mechanisms),
+  # -- Select technical sector --
+  selectInput('selected_tech', label = 'technical area', multiple = TRUE, selectize = TRUE,
+                choices = tech_areas, selected = tech_areas)
+
   # -- Select IPs --
 )
 
