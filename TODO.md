@@ -11,9 +11,12 @@ merged = left_join(z, admin2@data, by = c('TerritoryName' = 'TCNam'))
 merged %>% mutate(pr_match = Province == PrNam, ds_match = Province == DsNam) %>% select(Province, TerritoryName, TCType, DsNam, PrNam, pr_match, ds_match) %>% filter(ds_match==FALSE)
 * 26 non-matches on DSNam
 * 94 non-matches on PrNam
+- [ ] 9999/9998 in ActivCode?
+- [ ] rows in IM by Prov with no activity info?
 
 ### Main map:
 - [ ] basemap + choro
+- [ ] check for nat'l pgrms
 
 ### Aesthetics:
 - [ ] load custom font
