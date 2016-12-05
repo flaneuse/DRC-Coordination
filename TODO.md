@@ -4,6 +4,9 @@ Things to do
 - [ ] Organize data
 
 
+### Main map:
+- [ ] basemap + choro
+
 ### Aesthetics:
 - [ ] load custom font
 
