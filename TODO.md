@@ -4,6 +4,14 @@ Things to do
 - [ ] Organize data
 
 
+### Questions for Winock
+- [ ] Problems matching Territory / Province Name?
+z = im %>% group_by(Province, TerritoryName) %>% summarise(n = n())
+merged = left_join(z, admin2@data, by = c('TerritoryName' = 'TCNam'))
+merged %>% mutate(pr_match = Province == PrNam, ds_match = Province == DsNam) %>% select(Province, TerritoryName, TCType, DsNam, PrNam, pr_match, ds_match) %>% filter(ds_match==FALSE)
+* 26 non-matches on DSNam
+* 94 non-matches on PrNam
+
 ### Main map:
 - [ ] basemap + choro
 
