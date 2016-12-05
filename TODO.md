@@ -11,5 +11,6 @@ Things to do
 - [ ] load custom font
 
 ### Deployment:
+- [ ] add Google Analytics to track
 - [ ] deploy on server
 - [ ] write instructions for changing/updating files
