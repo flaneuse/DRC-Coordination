@@ -19,14 +19,14 @@ data_dir = '~/Documents/USAID/DRC Coordination/data/'
 pkgs = c(
   # data import
   'readxl', 
-  '', 
   # data wrangling
   'dplyr', 
   # shiny
   'shiny', 
   'shinydashboard', 
   # plotting
-  'ggplot2', 
+  'ggplot2',
+  'ggvis',
   'leaflet',
   'extrafont')
 
@@ -66,10 +66,10 @@ load(paste0(data_dir, 'geodata.RData'))
 # Set limits for bounding box ---------------------------------------------
 spacer = 0.05
 
-minLon = min(admin1$long) * (1 - spacer)
-minLat = min(admin1$lat) * (1 - spacer)
-maxLon = max(admin1$long) * (1 + spacer)
-maxLat = max(admin1$lat) * (1 + spacer)
+minLon = admin1@bbox['x', 'min'] * (1-spacer)
+minLat = admin1@bbox['y', 'min'] * (1-spacer)
+maxLon = admin1@bbox['x', 'max'] * (1+spacer)
+maxLat = admin1@bbox['y', 'max'] * (1+spacer)
 
 
 # Pull out choices for provinces, IPs, mechanisms -------------------------
@@ -102,12 +102,12 @@ purpleAccent = '#984ea3'
 colourProv = c('#e41a1c', '#377eb8', 
                '#4daf4a', '#984ea3', '#ff7f00')
 
-categPal = colorFactor(palette = colourProv, domain = provinces)
+categPal = colorFactor(palette = 'YlOrRd', domain = provinces)
 contPal = colorNumeric(palette = 'YlGnBu', domain = 0:20)
 
 # sizes -------------------------------------------------------------------
-widthMap = '750px'
-heightMap = '675px'
+widthMap = '600px'
+heightMap = '525px'
 widthDot = '450px'
 circleScaling = 1000
 yAxis_pad = 2.25

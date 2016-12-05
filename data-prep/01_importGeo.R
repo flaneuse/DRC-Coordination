@@ -144,10 +144,10 @@ admin2 = shp2df(baseDir = geo_wd, layerName = admin2_file)
 
 # pull out the data, centroids
 admin1_centroids = admin1$centroids
-admin1 = admin1$df
+admin1 = read_shp(baseDir = geo_wd, layerName = admin1_file)
 
 admin2_centroids = admin2$centroids
-admin2 = admin2$df
+admin2 = read_shp(baseDir = geo_wd, layerName = admin2_file)
 
 # export data -------------------------------------------------------------
 save(list = c('admin1', 'admin2', 'admin1_centroids', 'admin2_centroids'), file = '~/Documents/USAID/DRC Coordination/data/geodata.RData')
